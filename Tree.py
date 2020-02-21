@@ -28,6 +28,7 @@ class Tree:
     def len (self):
         """Return the total number of elements in the tree."""
         raise NotImplementedError( must be implemented by subclass )
+
     # ---------- concrete methods implemented in this class ----------
     def is root(self, p):
         """Return True if Position p represents the root of the tree."""
@@ -38,3 +39,27 @@ class Tree:
     def is empty(self):
         """Return True if the tree is empty."""
         return len(self) == 0
+
+    """Return the number of levels separating Position p from the root."""
+    def depth(self, p):
+        if self.is root(p):
+            return 0
+        else:
+            return 1 + self.depth(self.parent(p))
+
+    def height(self, p=None):
+        """Return the height of the subtree rooted at Position p.
+        If p is None, return the height of the entire tree. """
+        if p is None:
+            p = self.root()
+        return self.height2(p) # start height2 recursion
+
+    def height1(self): # works, but O(nˆ2) worst-case time Return the height of the tree.
+        return max(self.depth(p) for p in self.positions( ) if self.is leaf(p))
+
+    def height2(self, p): # time is linear in size of subtree
+        """Return the height of the subtree rooted at Position p"""
+        if self.is leaf(p):
+            return 0
+        else:
+            return 1 + max(self. height2(c) for c in self.children(p))
